@@ -21,23 +21,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
-@api_view(['POST'])
-def registerUser(request):
-    data = request.data
-    
-    try:
-        user = User.objects.create(
-            first_name=data['name'],
-            username=data['email'],
-            email=data['email'],
-            password= make_password(data['password'])
-        )
-        serializer = UserSerializerWithToken(user, many=False)
-        return Response(serializer.data)
-    except:
-        message = {'detail': 'User with this email already exists.'}
-        return Response(message, status=status.HTTP_400_BAD_REQUEST)
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getUserProfile(request):
@@ -51,3 +34,24 @@ def getUsers(request):
     users = User.objects.all()
     serializer = UserSerializer(users, many=True)
     return  Response(serializer.data)
+
+@api_view(['POST'])
+def registerUser(request):
+    data = request.data
+
+    if User.objects.filter(username=data['email']).exists():
+        return Response({'detail': 'User with this email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    user = User.objects.create(
+        first_name=data['name'],
+        username=data['email'],
+        email=data['email'],
+        password=make_password(data['password'])
+    )
+
+    return Response({
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+        'name': user.first_name
+    }, status=status.HTTP_201_CREATED)
