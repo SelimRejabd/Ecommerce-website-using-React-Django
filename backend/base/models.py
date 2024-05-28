@@ -42,7 +42,7 @@ class Order(models.Model):
     shippingPrice = models.DecimalField(
         max_digits=5, decimal_places=2, null=True, blank=True)
     totalPrice = models.DecimalField(
-        max_digits=5, decimal_places=2, null=True, blank=True)
+        max_digits=9, decimal_places=2, null=True, blank=True)
     isPaid = models.BooleanField(default=False)
     paidAt = models.DateTimeField(auto_now_add=False, null=True, blank=True)
     isDelivered = models.BooleanField(default=False)

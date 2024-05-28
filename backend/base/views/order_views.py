@@ -42,7 +42,7 @@ def addOrderItems(request):
                 product=product,
                 order=order,
                 name=product.name,
-                qty=item['qty'],
+                qty= int(item['qty']),
                 price=item['price'],
                 image=product.image.url,
             )
