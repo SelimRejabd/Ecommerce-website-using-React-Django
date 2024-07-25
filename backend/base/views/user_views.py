@@ -31,7 +31,10 @@ def getUserProfile(request):
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
 def getUsers(request):
-    users = User.objects.all()
+    try:
+        users = User.objects.all()
+    except:
+        return Response({'detail': 'No users found'}, status=status.HTTP_404_NOT_FOUND)
     serializer = UserSerializer(users, many=True)
     return  Response(serializer.data)
 
@@ -74,3 +77,12 @@ def registerUser(request):
         'email': user.email,
         'name': user.first_name
     }, status=status.HTTP_201_CREATED)
+
+@api_view(['DELETE'])
+@permission_classes([IsAdminUser])
+def deleteUser(request, pk):
+    userForDeletion = User.objects.get(id=pk)
+    userForDeletion.delete()
+    return Response('User was deleted')
+
+

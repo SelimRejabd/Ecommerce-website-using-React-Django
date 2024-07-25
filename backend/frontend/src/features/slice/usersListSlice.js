@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 const initialState = {
   users: [],
@@ -7,13 +7,12 @@ const initialState = {
   error: null,
 };
 
-
 export const fetchUsers = createAsyncThunk(
-  'users/fetchUsers',
-  async (_, {getState, rejectWithValue }) => {
+  "users/fetchUsers",
+  async (_, { getState, rejectWithValue }) => {
     try {
       const { user } = getState().user;
-      const response = await axios.get('/users/', {
+      const response = await axios.get("/users/", {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -29,8 +28,17 @@ export const fetchUsers = createAsyncThunk(
   }
 );
 
+export const deleteUser = createAsyncThunk("delete-user", async (id, {getState}) => {
+  const { user } = getState().user;
+  await axios.delete(`/users/delete/${id}/`, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    }});
+  return id;
+});
+
 const usersListSlice = createSlice({
-  name: 'users',
+  name: "users",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -43,9 +51,13 @@ const usersListSlice = createSlice({
         state.loading = false;
         state.users = action.payload;
       })
-      .addCase(fetchUsers.rejected, (state, action) => {
+      .addCase(fetchUsers.rejected, (state) => {
         state.loading = false;
-        state.error = action.payload || 'Something went wrong';
+        state.error = "You havn't permission to view this page";
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = state.users.filter((user) => user.id !== action.payload);
       });
   },
 });

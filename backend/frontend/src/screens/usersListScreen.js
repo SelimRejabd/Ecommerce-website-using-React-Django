@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUsers} from '../features/slice/usersListSlice';
+import { fetchUsers, deleteUser} from '../features/slice/usersListSlice';
 import { Table, Spinner, Alert, Container, Row, Col, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
@@ -13,10 +13,9 @@ const UsersListScreen = () => {
   }, [dispatch]);
 
   const handleDelete = (id) => {
-    // if (window.confirm('Are you sure you want to delete this user?')) {
-    //   dispatch(deleteUser(id));
-    // }
-    console.log('Delete user with id:', id);
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      dispatch(deleteUser(id));
+    }
   };
 
   return (
@@ -30,7 +29,7 @@ const UsersListScreen = () => {
             </div>
           ) : error ? (
             <Alert variant="danger">{error}</Alert>
-          ) : (
+          ) : users ? (
             <Table striped bordered hover responsive className="table-sm">
               <thead>
                 <tr>
@@ -74,7 +73,9 @@ const UsersListScreen = () => {
                 ))}
               </tbody>
             </Table>
-          )}
+          ) : 
+          <div>You don't have permission</div>
+          }
         </Col>
       </Row>
     </Container>
