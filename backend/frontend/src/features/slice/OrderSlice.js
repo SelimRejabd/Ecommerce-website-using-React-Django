@@ -3,6 +3,7 @@ import axios from "axios";
 
 const initialState = {
   order: null,
+  orders: [],
   loading: false,
   error: null,
   orderData: null,
@@ -50,6 +51,17 @@ export const getOrderById = createAsyncThunk(
   }
 );
 
+export const fetchMyOrders = createAsyncThunk('orders/fetchMyOrders', async (_, { getState }) => {
+  const { user } = getState().user;
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
+  const response = await axios.get('/orders/myorders', config);
+  return response.data;
+});
+
 const orderSlice = createSlice({
   name: "order",
   initialState,
@@ -85,6 +97,17 @@ const orderSlice = createSlice({
       .addCase(getOrderById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Something went wrong";
+      })
+      .addCase(fetchMyOrders.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchMyOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orders = action.payload;
+      })
+      .addCase(fetchMyOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });

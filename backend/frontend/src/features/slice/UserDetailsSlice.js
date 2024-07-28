@@ -12,7 +12,7 @@ export const fetchUserProfile = createAsyncThunk(
     async (_, { getState, rejectWithValue }) => {
         try {
             const { user } = getState().user;
-            const response = await axios.get('users/profile/', {
+            const response = await axios.get('/users/profile/', {
                 headers: {
                     Authorization: `Bearer ${user.token}`,
                 },
@@ -33,7 +33,7 @@ export const updateUserProfile = createAsyncThunk(
     async (userData, { getState, dispatch, rejectWithValue }) => {
         try {
             const { user } = getState().user;
-            const response = await axios.put('users/profile/update/', userData, {
+            const response = await axios.put('/users/profile/update/', userData, {
                 headers: {
                     Authorization: `Bearer ${user.token}`,
                 },
