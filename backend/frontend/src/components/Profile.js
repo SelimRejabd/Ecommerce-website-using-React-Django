@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchUserProfile } from "../features/slice/UserDetailsSlice";
 import { fetchMyOrders } from "../features/slice/OrderSlice";
+import { Table, Button } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -27,6 +29,7 @@ const Profile = () => {
   const handleUpdateButton = () => {
     navigate("/profile/update");
   };
+
 
   return (
     <div className="container">
@@ -57,6 +60,9 @@ const Profile = () => {
                   Update
                 </button>
               </div>
+
+              {/* My orders */}
+
               <div>
                 <h2 className="flex mt-5 text-center">My Orders</h2>
                 {ordersLoading ? (
@@ -64,44 +70,46 @@ const Profile = () => {
                 ) : ordersError ? (
                   <div className="alert alert-danger">{ordersError}</div>
                 ) : (
-                  <div className="list-group mt-3">
-                    {orders.map((order) => (
-                      <div key={order._id} className="list-group-item">
-                        <h5>Order {order._id}</h5>
-                        <div>
-                          <strong>Items:</strong>
-                          <ul>
-                            {order.orderItems.map((item) => (
-                              <li key={item._id}>
-                                {item.qty} x {item.name} - ${item.price}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <p>
-                          <strong>Total Price:</strong> ${order.totalPrice}
-                        </p>
-                        <p>
-                          <strong>Shipping Address:</strong>{" "}
-                          {order.shippingAddress.address},{" "}
-                          {order.shippingAddress.city},{" "}
-                          {order.shippingAddress.postalCode},{" "}
-                          {order.shippingAddress.country}
-                        </p>
-                        <p>
-                          <strong>Payment Method:</strong> {order.paymentMethod}
-                        </p>
-                        <p>
-                          <strong>Is Paid:</strong>{" "}
-                          {order.isPaid ? "Yes" : "No"}
-                        </p>
-                        <p>
-                          <strong>Is Delivered:</strong>{" "}
-                          {order.isDelivered ? "Yes" : "No"}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                  <Table striped bordered hover responsive className="table-sm">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        <th>Paid</th>
+                        <th>Delivered</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {orders.map((order) => (
+                        <tr key={order._id}>
+                          <td>{order._id}</td>
+                          <td>{order.createdAt === null ?<></> : order.createdAt.substring(0, 10) }</td>
+                          <td>{order.totalPrice}</td>
+                          <td>
+                            {order.isPaid ? (
+                              <i
+                                className="fas fa-check"
+                                style={{ color: "green" }}
+                              ></i>
+                            ) : (
+                              <i
+                                className="fas fa-times"
+                                style={{ color: "red" }}
+                              ></i>
+                            )}
+                          </td>
+                          <td>
+                            <LinkContainer to={`/order/${order._id}`}>
+                              <Button  className="btn btn-primary rounded">
+                                Details
+                              </Button>
+                            </LinkContainer>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
                 )}
               </div>
             </div>

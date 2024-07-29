@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { ListGroup, Row, Col, Image, Card, Button } from "react-bootstrap";
+import { ListGroup, Row, Col, Image, Card } from "react-bootstrap";
 import { getOrderById } from "../features/slice/OrderSlice";
+import { Link } from "react-router-dom";
 
 const OrderScreen = () => {
   const dispatch = useDispatch();
@@ -17,7 +18,11 @@ const OrderScreen = () => {
   const error = useSelector((state) => state.order.error);
 
   return (
-    <div className="container mt-5">
+    <div className="container">
+      <Link to="/profile" className="btn btn-light my-3">
+        <i className="fas fa-arrow-left"> </i>
+        Go Back
+      </Link>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
