@@ -38,6 +38,17 @@ def getUsers(request):
     serializer = UserSerializer(users, many=True)
     return  Response(serializer.data)
 
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getUser(request, id):
+    try:
+        user = User.objects.get(id=id)
+    except:
+        return Response({'detail':'No user Found'}, status=status.HTTP_404_NOT_FOUND)
+    serializer = UserSerializer(user, many=False)
+    return Response(serializer.data)
+
+
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def updateUserProfile(request):

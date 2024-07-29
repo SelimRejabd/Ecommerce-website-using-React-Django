@@ -71,7 +71,7 @@ const LoginForm = () => {
             </div>
             <button
               type="submit"
-              className="btn btn-primary mt-4 w-30"
+              className="btn btn-primary mt-4 w-30 rounded"
               disabled={loading}
             >
               {loading ? "Logging in..." : "Login"}

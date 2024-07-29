@@ -28,9 +28,9 @@ const CartScreen = () => {
 
   return (
     <div>
-      <h2>Cart</h2>
+      <h2 className="text-center">Cart</h2>
       {items.length === 0 ? (
-        <p>Your cart is empty.</p>
+        <p className="text-center">Your cart is empty.</p>
       ) : (
         <div>
           <ListGroup variant="flush">

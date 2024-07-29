@@ -5,7 +5,7 @@ import {
   fetchUserProfile,
   updateUserProfile,
 } from "../features/slice/UserDetailsSlice";
-import { logout, loginUser } from "../features/slice/UserLoginSlice";
+import { loginUser } from "../features/slice/UserLoginSlice";
 
 const UpdateProfileScreen = () => {
   const dispatch = useDispatch();
@@ -65,23 +65,18 @@ const UpdateProfileScreen = () => {
     }
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
-  };
-
   return (
     <div>
       <Link to="/profile" className="btn btn-light my-3">
         <i className="fas fa-arrow-left"> </i>
         Go Back
       </Link>
-      <div className="container mt-5">
+      <div className="container">
         <div className="row">
           <div className="flex col-md-6 offset-md-3">
             <h2 className="text-center">Profile</h2>
             {error && <div className="alert alert-danger">{error.detail || error}</div>}
-            <form onSubmit={handleSubmit} className="mt-4">
+            <form onSubmit={handleSubmit} className="flex mt-4">
               <div className="form-group">
                 <label htmlFor="name">Name</label>
                 <input
@@ -133,17 +128,10 @@ const UpdateProfileScreen = () => {
               </div>
               <button
                 type="submit"
-                className="btn btn-primary mt-4 w-100"
+                className="btn btn-primary mt-4 rounded"
                 disabled={loading}
               >
-                {loading ? "Updating..." : "Update Profile"}
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary mt-3 w-100"
-                onClick={handleLogout}
-              >
-                Logout
+                {loading ? "Updating..." : "Update"}
               </button>
             </form>
           </div>
