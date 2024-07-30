@@ -35,21 +35,7 @@ function Header() {
                   <i className="fas fa-shopping-cart"></i>Cart
                 </Nav.Link>
               </LinkContainer>
-              {user != null && user.isAdmin ? (
-                <NavDropdown title={user.username}>
-                  <LinkContainer to="/profile">
-                    <NavDropdown.Item>Profile</NavDropdown.Item>
-                  </LinkContainer>
-
-                  <LinkContainer to="/users">
-                    <NavDropdown.Item>Users List</NavDropdown.Item>
-                  </LinkContainer>
-
-                  <NavDropdown.Item onClick={handleLogout}>
-                    Logout
-                  </NavDropdown.Item>
-                </NavDropdown>
-              ) : user ? (
+              {user ? (
                 <NavDropdown title={user.username}>
                   <LinkContainer to="/profile">
                     <NavDropdown.Item>Profile</NavDropdown.Item>
@@ -64,6 +50,20 @@ function Header() {
                     <i className="fas fa-user"></i>Login
                   </Nav.Link>
                 </LinkContainer>
+              )}
+
+              {user != null && user.isAdmin && (
+                <NavDropdown title="Admin">
+                  <LinkContainer to="/admin/users">
+                    <NavDropdown.Item>Users</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/admin/products">
+                    <NavDropdown.Item>Products</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/admin/orders">
+                    <NavDropdown.Item>Orders</NavDropdown.Item>
+                  </LinkContainer>
+                </NavDropdown>
               )}
             </Nav>
           </Navbar.Collapse>
