@@ -14,6 +14,10 @@ import PlaceOrder from "./screens/PlaceOrder";
 import OrderScreen from "./screens/OrderScreen";
 import UsersListScreen from "./screens/usersListScreen";
 import UpdateProfileScreen from "./screens/UpdateProfileScreen";
+import ProductListScreen from "./screens/ProductListScreen";
+import AddProductScreen from "./screens/AddProductScreen";
+import EditProductScreen from "./screens/EditProductScreen";
+import UserEditScreen from "./screens/UserEditScreen";
 
 function App() {
   return (
@@ -33,7 +37,11 @@ function App() {
             <Route path="/payment" Component={PaymentScreen}/>
             <Route path="/placeorder" Component={PlaceOrder}/>
             <Route path="/order/:id" Component={OrderScreen}/>
-            <Route path="/users" Component={UsersListScreen}/>
+            <Route path="/admin/users" Component={UsersListScreen}/>
+            <Route path="/admin/products" Component={ProductListScreen}/>
+            <Route path="/admin/product/add" Component={AddProductScreen}/>
+            <Route path="/admin/product/:id/edit" Component={EditProductScreen}/>
+            <Route path="/admin/user/:id/edit" Component={UserEditScreen}/>
           </Routes>
         </Container>
       </main>

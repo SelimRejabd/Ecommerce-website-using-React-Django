@@ -3,28 +3,24 @@ import { Link, useNavigate} from "react-router-dom";
 import { Row, Col, Image, ListGroup, Button, Form } from "react-bootstrap";
 import Rating from "../components/Rating";
 import { useParams } from "react-router-dom";
-import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../features/slice/CartSlice";
+import { fetchProductById } from "../features/slice/ProductSlice";
 
 const ProductScreen = () => {
   const [qty, setQty] = useState(1);
   const { id,} = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [product, setProduct] = useState(null);
+  const { product } = useSelector((state) => state.products);
+
   
   useEffect(() => {
-    async function fetchProduct() {
-      try {
-        const { data } = await axios.get(`/products/${id}`);
-        setProduct(data);
-      } catch (error) {
-        console.error("Error fetching product:", error);
-      }
+    if (!product || product._id !== id) {
+      dispatch(fetchProductById(id));
     }
-    fetchProduct();
-  }, [id]);
+  }, [dispatch, id, product]);
+
 
   if (!product) {
     return <div>No product found</div>;

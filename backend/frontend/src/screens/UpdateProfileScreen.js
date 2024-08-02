@@ -60,7 +60,9 @@ const UpdateProfileScreen = () => {
       ).then(() => {
         dispatch(
           loginUser({ username: formData.email, password: formData.password })
-        );
+        ).then(() => {
+          navigate("/profile");
+        });
       });
     }
   };

@@ -70,7 +70,7 @@ def getOrderById(request, pk):
         return Response({'detail': 'Order does not exist'}, status=status.HTTP404_NOT_FOUND)
     
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def getMyOrders(request):
     user = request.user
     orders = user.order_set.all()
