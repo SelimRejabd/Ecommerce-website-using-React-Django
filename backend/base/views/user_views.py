@@ -67,6 +67,19 @@ def updateUserProfile(request):
 
     return Response(serializer.data)
 
+@api_view(['PUT'])
+@permission_classes([IsAdminUser])
+def updateUser(request, pk):
+    user = User.objects.get(id=pk)
+    data = request.data
+
+    user.is_staff = data['isAdmin']
+
+    user.save()
+
+    serializer = UserSerializer(user, many=False)
+    return Response(serializer.data)
+
 
 @api_view(['POST'])
 def registerUser(request):

@@ -6,6 +6,7 @@ const initialState = {
   user: {},
   loading: false,
   error: null,
+  successMessage: null,
 };
 
 export const fetchUsers = createAsyncThunk(
@@ -29,10 +30,11 @@ export const fetchUsers = createAsyncThunk(
   }
 );
 
-export const fetchUser = createAsyncThunk('fecth-user',
+export const fetchUser = createAsyncThunk('fetch-user',
   async (id, {getState}) => {
     const {user} = getState().user;
-    const response = await axios.get(`users/${id}`, {
+    console.log(id);
+    const response = await axios.get(`/users/${id}`, {
       headers: {
         Authorization: `Bearer ${user.token}`
       }
@@ -40,6 +42,16 @@ export const fetchUser = createAsyncThunk('fecth-user',
     return response.data;
   }
 )
+
+export const updateUser = createAsyncThunk("update-user", async (formData, {getState}) => {
+  const { user } = getState().user;
+  const response = await axios.put(`/users/edit/${formData.id}/`, formData, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  });
+  return response.data;
+});
 
 export const deleteUser = createAsyncThunk("delete-user", async (id, {getState}) => {
   const { user } = getState().user;
@@ -53,7 +65,11 @@ export const deleteUser = createAsyncThunk("delete-user", async (id, {getState})
 const usersListSlice = createSlice({
   name: "users",
   initialState,
-  reducers: {},
+  reducers: {
+    clearSuccessMessage(state) {
+      state.successMessage = null;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUsers.pending, (state) => {
@@ -80,11 +96,19 @@ const usersListSlice = createSlice({
         state.loading = false;
         state.error = "You havn't permission to view this page";
       })
+      .addCase(updateUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.successMessage = "User updated successfully";
+      })
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.loading = false;
         state.users = state.users.filter((user) => user.id !== action.payload);
       });
   },
 });
-
+export const { clearSuccessMessage } = usersListSlice.actions;
 export default usersListSlice.reducer;
