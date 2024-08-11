@@ -4,10 +4,33 @@ import axios from "axios";
 const initialState = {
   order: null,
   orders: [],
+  orderList: [],
   loading: false,
   error: null,
   orderData: null,
 };
+
+export const fetchOrders = createAsyncThunk(
+  "order/getOrders",
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const { user } = getState().user;
+      const response = await axios.get("/orders/", {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
 
 export const saveOrder = createAsyncThunk(
   "order/saveOrder",
@@ -74,6 +97,19 @@ const orderSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orderList = action.payload;
+      })
+      .addCase(fetchOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = "You havn't permission to view this page";
+      }
+      )
       .addCase(saveOrder.pending, (state) => {
         state.loading = true;
         state.error = null;

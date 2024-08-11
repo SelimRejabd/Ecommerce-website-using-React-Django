@@ -12,12 +12,13 @@ import ShippingScreen from "./screens/ShippingScreen";
 import PaymentScreen from "./screens/PaymentScreen";
 import PlaceOrder from "./screens/PlaceOrder";
 import OrderScreen from "./screens/OrderScreen";
-import UsersListScreen from "./screens/usersListScreen";
+import UsersListScreen from "./screens/UsersListScreen";
 import UpdateProfileScreen from "./screens/UpdateProfileScreen";
 import ProductListScreen from "./screens/ProductListScreen";
 import AddProductScreen from "./screens/AddProductScreen";
 import EditProductScreen from "./screens/EditProductScreen";
 import UserEditScreen from "./screens/UserEditScreen";
+import AdminOrderList from "./screens/AdminOrderListScreen";
 
 function App() {
   return (
@@ -27,21 +28,25 @@ function App() {
         <Container>
           <Routes>
             <Route path="/" Component={HomeScreen} exact />
-            <Route path="/product/:id" Component={ProductScreen}/>
-            <Route path="/cart/:id?" Component={CartScreen}/>
-            <Route path="/login" Component={LoginForm}/>
-            <Route path="/profile" Component={Profile}/>
-            <Route path="profile/update" Component={UpdateProfileScreen}/>
-            <Route path="/register" Component={Register}/>
-            <Route path="/shipping" Component={ShippingScreen}/>
-            <Route path="/payment" Component={PaymentScreen}/>
-            <Route path="/placeorder" Component={PlaceOrder}/>
-            <Route path="/order/:id" Component={OrderScreen}/>
-            <Route path="/admin/users" Component={UsersListScreen}/>
-            <Route path="/admin/products" Component={ProductListScreen}/>
-            <Route path="/admin/product/add" Component={AddProductScreen}/>
-            <Route path="/admin/product/:id/edit" Component={EditProductScreen}/>
-            <Route path="/admin/user/:id/edit" Component={UserEditScreen}/>
+            <Route path="/product/:id" Component={ProductScreen} />
+            <Route path="/cart/:id?" Component={CartScreen} />
+            <Route path="/login" Component={LoginForm} />
+            <Route path="/profile" Component={Profile} />
+            <Route path="profile/update" Component={UpdateProfileScreen} />
+            <Route path="/register" Component={Register} />
+            <Route path="/shipping" Component={ShippingScreen} />
+            <Route path="/payment" Component={PaymentScreen} />
+            <Route path="/placeorder" Component={PlaceOrder} />
+            <Route path="/order/:id" Component={OrderScreen} />
+            <Route path="/admin/users" Component={UsersListScreen} />
+            <Route path="/admin/products" Component={ProductListScreen} />
+            <Route path="/admin/product/add" Component={AddProductScreen} />
+            <Route
+              path="/admin/product/:id/edit"
+              Component={EditProductScreen}
+            />
+            <Route path="/admin/user/:id/edit" Component={UserEditScreen} />
+            <Route path="/admin/orders" Component={AdminOrderList} />
           </Routes>
         </Container>
       </main>

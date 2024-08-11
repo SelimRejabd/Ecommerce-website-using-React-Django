@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Table, Button, Row, Col } from "react-bootstrap";
+import { Table, Button, Row, Col, Alert } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -40,7 +40,7 @@ const ProductListScreen = () => {
       {loading ? (
         <h2>Loading...</h2>
       ) : error ? (
-        <h3>{error}</h3>
+        <Alert variant="danger">{error}</Alert>
       ) : (
         <Table striped bordered hover responsive className="table-sm">
           <thead>
