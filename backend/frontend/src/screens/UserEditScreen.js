@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
 import {
   fetchUser,
@@ -11,6 +11,7 @@ import {
 const UserEditScreen = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
+  const navigate = useNavigate();
   const user = useSelector((state) => state.usersList.user);
   const successMessage = useSelector((state) => state.usersList.successMessage);
 
@@ -41,12 +42,12 @@ const UserEditScreen = () => {
     }
   }, [successMessage, dispatch]);
 
+  const handleBack = () => {
+    navigate(-1);
+  }
   return (
     <div>
-      <Link to="/admin/users" className="btn btn-light my-3">
-        <i className="fas fa-arrow-left"> </i>
-        Go Back
-      </Link>
+      <Button className="btn btn-light " onClick={handleBack}><i className="fas fa-arrow-left"></i> Go Back</Button>
       <Container className="mt-5">
         <Row className="justify-content-center">
           <Col md={6}>

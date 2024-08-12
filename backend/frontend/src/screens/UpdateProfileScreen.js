@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   fetchUserProfile,
   updateUserProfile,
 } from "../features/slice/UserDetailsSlice";
 import { loginUser } from "../features/slice/UserLoginSlice";
+import { Button } from "react-bootstrap";
 
 const UpdateProfileScreen = () => {
   const dispatch = useDispatch();
@@ -67,12 +68,13 @@ const UpdateProfileScreen = () => {
     }
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
     <div>
-      <Link to="/profile" className="btn btn-light my-3">
-        <i className="fas fa-arrow-left"> </i>
-        Go Back
-      </Link>
+      <Button className="btn btn-light " onClick={handleBack}><i className="fas fa-arrow-left"></i> Go Back</Button>
       <div className="container">
         <div className="row">
           <div className="flex col-md-6 offset-md-3">

@@ -1,28 +1,39 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { ListGroup, Row, Col, Image, Card } from "react-bootstrap";
-import { getOrderById } from "../features/slice/OrderSlice";
-import { Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { ListGroup, Row, Col, Image, Card, Button } from "react-bootstrap";
+import {
+  getOrderById,
+  updateOrderToDelivered,
+} from "../features/slice/OrderSlice";
 
 const OrderScreen = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id } = useParams();
+
+  const {
+    orderData: order,
+    loading,
+    error,
+  } = useSelector((state) => state.order);
 
   useEffect(() => {
     dispatch(getOrderById(id));
   }, [id, dispatch]);
 
-  const order = useSelector((state) => state.order.orderData);
-  const loading = useSelector((state) => state.order.loading);
-  const error = useSelector((state) => state.order.error);
+  const markAsDeliveredHandler = (orderId) => {
+    dispatch(updateOrderToDelivered(orderId));
+    dispatch(getOrderById(id));
+  };
+
+  const handleBack = () => {
+    navigate(-1);
+  }
 
   return (
     <div className="container">
-      <Link to="/profile" className="btn btn-light my-3">
-        <i className="fas fa-arrow-left"> </i>
-        Go Back
-      </Link>
+      <Button className="btn btn-light " onClick={handleBack}><i className="fas fa-arrow-left"></i> Go Back</Button>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
@@ -62,13 +73,14 @@ const OrderScreen = () => {
                     </p>
 
                     {order.isDelivered ? (
-                        <p className="alert alert-success">
-                            <strong>Delivered on: </strong>
-                            {order.deliveredAt}
-                        </p>
-                        ) : (
-                        <p className="alert alert-warning">Not Delivered</p>
-                        
+                      <p className="alert alert-success">
+                        <strong>Delivered on: </strong>
+                        {order.deliveredAt
+                          ? order.deliveredAt.toString().substring(0, 10)
+                          : null}
+                      </p>
+                    ) : (
+                      <p className="alert alert-warning">Not Delivered</p>
                     )}
                   </ListGroup.Item>
 
@@ -82,7 +94,9 @@ const OrderScreen = () => {
                     {order.isPaid ? (
                       <p className="alert alert-success">
                         <strong>Paid on: </strong>
-                        {order.paidAt}
+                        {order.paidAt
+                          ? order.paidAt.toString().substring(0, 10)
+                          : null}
                       </p>
                     ) : (
                       <p className="alert alert-warning">Not Paid</p>
@@ -149,6 +163,19 @@ const OrderScreen = () => {
                         <Col>${order.totalPrice}</Col>
                       </Row>
                     </ListGroup.Item>
+                    {order && !order.isDelivered ? (
+                      <ListGroup.Item>
+                        <Row>
+                          <Button
+                            type="button"
+                            className="btn btn-block"
+                            onClick={() => markAsDeliveredHandler(order._id)}
+                          >
+                            Mark as Delivered
+                          </Button>
+                        </Row>
+                      </ListGroup.Item>
+                    ) : null}
                   </ListGroup>
                 </Card>
               </Col>

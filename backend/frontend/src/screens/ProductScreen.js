@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { Row, Col, Image, ListGroup, Button, Form } from "react-bootstrap";
 import Rating from "../components/Rating";
 import { useParams } from "react-router-dom";
@@ -16,10 +16,8 @@ const ProductScreen = () => {
 
   
   useEffect(() => {
-    if (!product || product._id !== id) {
       dispatch(fetchProductById(id));
-    }
-  }, [dispatch, id, product]);
+  }, [dispatch, id]);
 
 
   if (!product) {
@@ -30,13 +28,13 @@ const ProductScreen = () => {
     dispatch(addItem({ ...product, qty }));
     navigate(`/cart/${id}?qty=${qty}`);
   }
+  const handleBack = () => {
+    navigate(-1);
+  }
 
   return (
     <div>
-      <Link to="/" className="btn btn-light my-3">
-        <i className="fas fa-arrow-left"> </i>
-        Go Back
-      </Link>
+      <Button className="btn btn-light mb-3 " onClick={handleBack}><i className="fas fa-arrow-left"></i> Go Back</Button>
       <Row>
         <Col md={6}>
           <Image src={product.image} alt={product.name} fluid />

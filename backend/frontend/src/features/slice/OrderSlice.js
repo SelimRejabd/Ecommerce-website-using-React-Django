@@ -85,6 +85,48 @@ export const fetchMyOrders = createAsyncThunk('orders/fetchMyOrders', async (_, 
   return response.data;
 });
 
+export const updateOrderToPaid = createAsyncThunk(
+  'order/updateOrderToPaid',
+  async (orderId, { getState, rejectWithValue }) => {
+    try {
+      const { user } = getState().user;
+      const response = await axios.put(`/orders/${orderId}/pay`, {}, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
+export const updateOrderToDelivered = createAsyncThunk(
+  'order/updateOrderToDelivered',
+  async (orderId, { getState, rejectWithValue }) => {
+    try {
+      const { user } = getState().user;
+      const response = await axios.put(`/orders/${orderId}/deliver/`, {}, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
 const orderSlice = createSlice({
   name: "order",
   initialState,

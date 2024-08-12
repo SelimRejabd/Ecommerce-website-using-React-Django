@@ -63,7 +63,7 @@ const AdminOrderListScreen = () => {
                 <td>
                   <Button
                     type="button"
-                    className="small rounded"
+                    className="btn btn-light btn-sm"
                     onClick={() => {
                       navigate(`/order/${order._id}`);
                     }}
