@@ -3,8 +3,8 @@ import axios from "axios";
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
-  async () => {
-    const res = await axios.get(`/products/`);
+  async (keyword = "") => {
+    const res = await axios.get(`/products/?search=${keyword}`);
     return res.data;
   }
 );

@@ -1,7 +1,8 @@
 import React from "react";
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown, Row, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import SearchBox from "./SearchBox";
 import { logout } from "../features/slice/UserLoginSlice";
 import { useNavigate } from "react-router-dom";
 
@@ -24,49 +25,55 @@ function Header() {
         className="bg-dark text-white"
       >
         <Container>
-          <LinkContainer to="/">
-            <Navbar.Brand>TopShop</Navbar.Brand>
-          </LinkContainer>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <LinkContainer to="/cart">
-                <Nav.Link>
-                  <i className="fas fa-shopping-cart"></i>Cart
-                </Nav.Link>
+          <Row className="w-100">
+            <Col xs={4} className="d-flex align-items-center">
+              <LinkContainer to="/">
+                <Navbar.Brand>TopShop</Navbar.Brand>
               </LinkContainer>
-              {user ? (
-                <NavDropdown title={user.username}>
-                  <LinkContainer to="/profile">
-                    <NavDropdown.Item>Profile</NavDropdown.Item>
-                  </LinkContainer>
-                  <NavDropdown.Item onClick={handleLogout}>
-                    Logout
-                  </NavDropdown.Item>
-                </NavDropdown>
-              ) : (
-                <LinkContainer to="/login">
+            </Col>
+            <Col xs={4} className="d-flex justify-content-center">
+              <SearchBox />
+            </Col>
+            <Col xs={4}>
+              <Nav className="ms-auto d-flex justify-content-end align-items-center">
+                <LinkContainer to="/cart">
                   <Nav.Link>
-                    <i className="fas fa-user"></i>Login
+                    <i className="fas fa-shopping-cart"></i> Cart
                   </Nav.Link>
                 </LinkContainer>
-              )}
+                {user ? (
+                  <NavDropdown title={user.username} id="username">
+                    <LinkContainer to="/profile">
+                      <NavDropdown.Item>Profile</NavDropdown.Item>
+                    </LinkContainer>
+                    <NavDropdown.Item onClick={handleLogout}>
+                      Logout
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                ) : (
+                  <LinkContainer to="/login">
+                    <Nav.Link>
+                      <i className="fas fa-user"></i> Login
+                    </Nav.Link>
+                  </LinkContainer>
+                )}
 
-              {user != null && user.isAdmin && (
-                <NavDropdown title="Admin">
-                  <LinkContainer to="/admin/users">
-                    <NavDropdown.Item>Users</NavDropdown.Item>
-                  </LinkContainer>
-                  <LinkContainer to="/admin/products">
-                    <NavDropdown.Item>Products</NavDropdown.Item>
-                  </LinkContainer>
-                  <LinkContainer to="/admin/orders">
-                    <NavDropdown.Item>Orders</NavDropdown.Item>
-                  </LinkContainer>
-                </NavDropdown>
-              )}
-            </Nav>
-          </Navbar.Collapse>
+                {user != null && user.isAdmin && (
+                  <NavDropdown title="Admin" id="adminmenu">
+                    <LinkContainer to="/admin/users">
+                      <NavDropdown.Item>Users</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/products">
+                      <NavDropdown.Item>Products</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/orders">
+                      <NavDropdown.Item>Orders</NavDropdown.Item>
+                    </LinkContainer>
+                  </NavDropdown>
+                )}
+              </Nav>
+            </Col>
+          </Row>
         </Container>
       </Navbar>
     </header>

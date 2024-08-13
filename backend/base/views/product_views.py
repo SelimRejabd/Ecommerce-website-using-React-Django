@@ -8,7 +8,13 @@ from rest_framework import status
 
 @api_view(['GET'])
 def getProducts(request):
-    products = Product.objects.all()
+
+    search_query = request.query_params.get('search', None)
+    if search_query:
+        products = Product.objects.filter(name__icontains=search_query) | Product.objects.filter(category__icontains=search_query) | Product.objects.filter(brand__icontains=search_query) 
+    else:
+        products = Product.objects.all()
+
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data)
 

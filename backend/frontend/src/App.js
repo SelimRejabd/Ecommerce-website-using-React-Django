@@ -28,6 +28,7 @@ function App() {
         <Container>
           <Routes>
             <Route path="/" Component={HomeScreen} exact />
+            <Route path="/search/:keyword" element={<HomeScreen />} />
             <Route path="/product/:id" Component={ProductScreen} />
             <Route path="/cart/:id?" Component={CartScreen} />
             <Route path="/login" Component={LoginForm} />
