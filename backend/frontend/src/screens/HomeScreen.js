@@ -4,6 +4,7 @@ import Product from "../components/Product";
 import { fetchProducts } from "../features/slice/ProductSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import ProductCarousel from "../components/ProductCarousel";
 
 export default function HomeScreen() {
   const { products, error } = useSelector((state) => state.products);
@@ -21,7 +22,8 @@ export default function HomeScreen() {
 
   return (
     <div>
-      <h1>Latest Products</h1>
+      {!keyword && <ProductCarousel />}
+      <h1 className="mt-4">Latest Products</h1>
       <Row>
         {products.map((product) => (
           <Col key={product._id} sm={12} md={6} lg={4} xl={3}>

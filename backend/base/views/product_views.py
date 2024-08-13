@@ -25,6 +25,12 @@ def getProduct(request, pk):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def getTopProducts(request):
+    products = Product.objects.filter(rating__gte=4).order_by('-rating')[0:5]
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
 # @permission_classes([IsAuthenticated])
 def getUserProducts(request):
     user = request.user

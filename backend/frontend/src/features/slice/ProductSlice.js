@@ -9,6 +9,13 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
+export const fetchTopProducts = createAsyncThunk(
+  "products/fetchTopProducts",
+  async () => {
+    const res = await axios.get(`/products/top/`);
+    return res.data;
+  }
+);
 export const fetchProductById = createAsyncThunk(
   "products/fetchProductById",
   async (id) => {
@@ -84,6 +91,7 @@ export const ProductSlice = createSlice({
   initialState: {
     isLoading: true,
     products: [],
+    topProducts: [],
     error: null,
     product: null,
     successMessage: null,
@@ -129,6 +137,24 @@ export const ProductSlice = createSlice({
         state.isLoading = false;
         state.products = action.payload;
         state.error = null;
+      })
+      .addCase(fetchProductList.rejected, (state, action) => {
+        state.isLoading = false;
+        state.products = [];
+        state.error = action.error.message;
+      })
+      .addCase(fetchTopProducts.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchTopProducts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.topProducts = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchTopProducts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.topProducts = [];
+        state.error = action.error.message;
       })
       .addCase(addProduct.pending, (state) => {
         state.isLoading = true;
