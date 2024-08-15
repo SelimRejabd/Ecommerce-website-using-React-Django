@@ -1,10 +1,16 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from base.models import Product
 from base.serializers import ProductSerializer
 from rest_framework import status
+
+class CustomPagination(PageNumberPagination):
+    page_size = 8
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 @api_view(['GET'])
 def getProducts(request):
@@ -14,9 +20,18 @@ def getProducts(request):
         products = Product.objects.filter(name__icontains=search_query) | Product.objects.filter(category__icontains=search_query) | Product.objects.filter(brand__icontains=search_query) 
     else:
         products = Product.objects.all()
+    
+    paginator = CustomPagination()
+    result_page = paginator.paginate_queryset(products, request)
+    serializer = ProductSerializer(result_page, many=True)
+    totalPage = paginator.page.paginator.num_pages
+    return Response({
+        'results': serializer.data,
+        'totalPage': totalPage,
+        'currentPage': paginator.page.number,
+        'totalItems': paginator.page.paginator.count
+        })
 
-    serializer = ProductSerializer(products, many=True)
-    return Response(serializer.data)
 
 @api_view(['GET'])
 def getProduct(request, pk):

@@ -1,18 +1,33 @@
-import React, { useEffect } from "react";
-import { Table, Button, Row, Col, Alert } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import {
+  Table,
+  Button,
+  Row,
+  Col,
+  Alert,
+  Pagination,
+  Form,
+  InputGroup,
+} from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { fetchProducts, deleteProduct } from "../features/slice/ProductSlice";
 
 const ProductListScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { products, loading, error } = useSelector((state) => state.products);
+  const { products, loading, error, totalPage } = useSelector(
+    (state) => state.products
+  );
+
+  const { keyword } = useParams();
+  const [searchParams] = useSearchParams();
+  const page = Number(searchParams.get("page")) || 1;
 
   useEffect(() => {
-      dispatch(fetchProducts());
-  }, [dispatch, products.length]);
+    dispatch(fetchProducts({ keyword, page }));
+  }, [dispatch, keyword, page]);
 
   const handleAdd = () => {
     navigate("/admin/product/add");
@@ -20,8 +35,31 @@ const ProductListScreen = () => {
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
-      dispatch(deleteProduct(id)).then(()=>dispatch(fetchProducts()));
-      
+      dispatch(deleteProduct(id)).then(() => dispatch(fetchProducts()));
+    }
+  };
+
+  const handlePageChange = (newPage) => {
+    if (keyword) {
+      navigate(`/admin/products/search/${keyword}?page=${newPage}`);
+    } else {
+      navigate(`/admin/products/?page=${newPage}`);
+    }
+  };
+
+  const pageNumbersToShow = 3;
+  const startPage = Math.max(page - pageNumbersToShow, 1);
+  const endPage = Math.min(page + pageNumbersToShow, totalPage);
+
+  const [goToPage, setGoToPage] = useState(page);
+  const handleGoToPageChange = (e) => {
+    setGoToPage(e.target.value);
+  };
+
+  const handleGoToPageSubmit = (e) => {
+    e.preventDefault();
+    if (goToPage >= 1 && goToPage <= totalPage) {
+      handlePageChange(goToPage);
     }
   };
 
@@ -32,7 +70,7 @@ const ProductListScreen = () => {
           <h1>Products</h1>
         </Col>
         <Col className="d-flex justify-content-end">
-          <Button className=" rounded" onClick={handleAdd}>
+          <Button className="rounded btn-primary" onClick={handleAdd}>
             <i className="fas fa-plus"></i> Add Product
           </Button>
         </Col>
@@ -80,6 +118,53 @@ const ProductListScreen = () => {
           </tbody>
         </Table>
       )}
+
+      <div className="d-flex flex-column align-items-center mt-4">
+      <Pagination className="mt-4">
+          <Pagination.Prev
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page === 1}
+          />
+          {startPage > 1 && <Pagination.Item onClick={() => handlePageChange(1)}>1</Pagination.Item>}
+          {startPage > 2 && <Pagination.Ellipsis />}
+          {[...Array(endPage - startPage + 1).keys()].map((x) => (
+            <Pagination.Item
+              key={startPage + x}
+              active={startPage + x === page}
+              onClick={() => handlePageChange(startPage + x)}
+            >
+              {startPage + x}
+            </Pagination.Item>
+          ))}
+          {endPage < totalPage - 1 && <Pagination.Ellipsis />}
+          {endPage < totalPage && (
+            <Pagination.Item onClick={() => handlePageChange(totalPage)}>
+              {totalPage}
+            </Pagination.Item>
+          )}
+          <Pagination.Next
+            onClick={() => handlePageChange(Number(page) + 1)}
+            disabled={page === totalPage}
+          />
+        </Pagination>
+
+        <Form onSubmit={handleGoToPageSubmit} className="d-flex align-items-center">
+          <InputGroup>
+            <Form.Control
+              type="number"
+              min="1"
+              max={totalPage}
+              value={goToPage}
+              onChange={handleGoToPageChange}
+              className="custom-go-input"
+              style={{ maxWidth: "80px" }}
+            />
+            <Button type="submit" variant="primary" className="custom-go-button">
+              Go
+            </Button>
+          </InputGroup>
+        </Form>
+      </div>
     </div>
   );
 };

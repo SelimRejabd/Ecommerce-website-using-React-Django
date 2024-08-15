@@ -3,8 +3,8 @@ import axios from "axios";
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
-  async (keyword = "") => {
-    const res = await axios.get(`/products/?search=${keyword}`);
+  async ({keyword = "", page}) => {
+    const res = await axios.get(`/products/?search=${keyword}&page=${page}`);  
     return res.data;
   }
 );
@@ -95,6 +95,7 @@ export const ProductSlice = createSlice({
     error: null,
     product: null,
     successMessage: null,
+    totalPage: 1,
   },
   reducers: {
     clearMessages: (state) => {
@@ -109,8 +110,9 @@ export const ProductSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.products = action.payload;
+        state.products = action.payload.results;
         state.error = null;
+        state.totalPage = action.payload.totalPage;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.isLoading = false;
