@@ -3,8 +3,8 @@ import axios from "axios";
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
-  async ({keyword = "", page}) => {
-    const res = await axios.get(`/products/?search=${keyword}&page=${page}`);  
+  async ({ keyword = "", page }) => {
+    const res = await axios.get(`/products/?search=${keyword}&page=${page}`);
     return res.data;
   }
 );
@@ -26,61 +26,69 @@ export const fetchProductById = createAsyncThunk(
 
 export const fetchProductList = createAsyncThunk(
   "products/productList",
-  async ({getState}) => {
-    const {user} = getState().user;
-    const res = await axios.get(`products/product-list/`,
-    {headers
-      : {
-        Authorization: `Bearer ${user.token}`
-      }
-    }
-    );
+  async ({ getState }) => {
+    const { user } = getState().user;
+    const res = await axios.get(`products/product-list/`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
     return res.data;
   }
 );
 
-
 export const addProduct = createAsyncThunk(
   "products/addProduct",
-  async (formData, {getState}) => {
-    const {user} = getState().user;
-    const res = await axios.post(`/products/add/`, formData, 
-    {headers
-      : {
-        Authorization: `Bearer ${user.token}`
-      }
-    }
-    );
+  async (formData, { getState }) => {
+    const { user } = getState().user;
+    const res = await axios.post(`/products/add/`, formData, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
     return res.data;
   }
 );
 
 export const updateProduct = createAsyncThunk(
   "products/updateProduct",
-  async (formData, {getState}) => {
-    const {user} = getState().user;
+  async (formData, { getState }) => {
+    const { user } = getState().user;
     const id = formData.get("id");
-    const res = await axios.put(`/products/update/${id}/`, formData, 
-    {headers
-      : {
-        Authorization: `Bearer ${user.token}`
-      }
-    }
-    );
+    const res = await axios.put(`/products/update/${id}/`, formData, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
     return res.data;
   }
 );
 
 export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
-  async (id, {getState}) => {
-    const {user} = getState().user;
-    const res = await axios.delete(`/products/delete/${id}/`,
-    {headers
-      : {
+  async (id, { getState }) => {
+    const { user } = getState().user;
+    const res = await axios.delete(`/products/delete/${id}/`, {
+      headers: {
         Authorization: `Bearer ${user.token}`,
+      },
+    });
+    return res.data;
+  }
+);
+
+export const createProductReview = createAsyncThunk(
+  "products/createProductReview",
+  async (formData, { getState }) => {
+    const { user } = getState().user;
+    const res = await axios.post(
+      `/products/create-review/${formData.id}/`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
       }
-    }
     );
     return res.data;
   }
@@ -195,6 +203,18 @@ export const ProductSlice = createSlice({
         state.error = null;
       })
       .addCase(deleteProduct.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      })
+      .addCase(createProductReview.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createProductReview.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.successMessage = "Review added successfully";
+        state.error = null;
+      })
+      .addCase(createProductReview.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       });

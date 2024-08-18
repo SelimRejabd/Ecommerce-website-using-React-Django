@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Pagination, Button, Form, InputGroup } from "react-bootstrap";
+import { Row, Col, Pagination, Button, Form, InputGroup, Alert } from "react-bootstrap";
 import Product from "../components/Product";
 import { fetchProducts } from "../features/slice/ProductSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +21,7 @@ export default function HomeScreen() {
   }, [dispatch, keyword, page]);
 
   if (error) {
-    return <div>{error}</div>;
+    return <Alert variant="danger">{error}</Alert>;
   }
 
   const handlePageChange = (newPage) => {
